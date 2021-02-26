@@ -80,14 +80,14 @@ public class AuthActivity extends AppCompatActivity {
                                         result.setText(AuthActivity.this.res);
                                     }
                                 });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             } finally {
                                 urlConnection.disconnect();
                             }
                         }
                         //We of course catch the appropriate exceptions and log the error message
                         catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
