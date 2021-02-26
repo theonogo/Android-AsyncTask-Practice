@@ -3,6 +3,7 @@ package com.example.flickrapp.classes;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,11 +13,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
+    private final WeakReference<ImageView> imageViewReference;
+
+    public AsyncFlickrJSONData(ImageView imageView) {
+        imageViewReference = new WeakReference<ImageView>(imageView);
+    }
 
     @Override
     protected JSONObject doInBackground(String... strings) {
@@ -54,9 +61,24 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
         Log.i("JFL", jsonObject.toString());
 
         try {
-            String stringUrl = jsonObject.getJSONArray("items").getJSONObject(0)
-                    .getJSONObject("media").getString("m");
+            String stringUrl;
+            if(jsonObject.has("title"))
+            {
+                stringUrl = jsonObject.getJSONArray("items").getJSONObject(0)
+                        .getJSONObject("media").getString("m");
+            } else {
+                jsonObject = jsonObject.getJSONObject("photos").getJSONArray("photo").getJSONObject(0);
+                String server = jsonObject.getString("server");
+                String id = jsonObject.getString("id");
+                String secret = jsonObject.getString("secret");
+
+                stringUrl = "https://live.staticflickr.com/"+ server +"/"+ id +"_"+ secret +".jpg";
+            }
+
             Log.i("JFL", stringUrl);
+
+            AsyncBitmapDownloader asyncBitmapDownloader = new AsyncBitmapDownloader(imageViewReference.get());
+            asyncBitmapDownloader.execute(stringUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,7 +95,8 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
     }
 
     private JSONObject string2JSON(String s) throws JSONException {
-        s= s.substring(15, s.length() - 1);
+        s= s.substring(14, s.length() - 1);
+        if(s.charAt(0)=='(') { s = s.substring(1); }
         return new JSONObject(s);
     }
 }
