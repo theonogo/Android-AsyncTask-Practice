@@ -64,19 +64,23 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
             String stringUrl;
             if(jsonObject.has("title"))
             {
+                //If it's a recent picture, extract the image url
                 stringUrl = jsonObject.getJSONArray("items").getJSONObject(0)
                         .getJSONObject("media").getString("m");
             } else {
+                //if it's a location picture, extract image info,
                 jsonObject = jsonObject.getJSONObject("photos").getJSONArray("photo").getJSONObject(0);
                 String server = jsonObject.getString("server");
                 String id = jsonObject.getString("id");
                 String secret = jsonObject.getString("secret");
 
+                //which we use to construct image url
                 stringUrl = "https://live.staticflickr.com/"+ server +"/"+ id +"_"+ secret +".jpg";
             }
 
             Log.i("JFL", stringUrl);
 
+            //Start a new Asynctask with to download our acquired img from url
             AsyncBitmapDownloader asyncBitmapDownloader = new AsyncBitmapDownloader(imageViewReference.get());
             asyncBitmapDownloader.execute(stringUrl);
         } catch (JSONException e) {
@@ -95,6 +99,7 @@ public class AsyncFlickrJSONData extends AsyncTask<String, Void, JSONObject> {
     }
 
     private JSONObject string2JSON(String s) throws JSONException {
+        //removes jsonFlickrApi() or jsonFlickrFeed()
         s= s.substring(14, s.length() - 1);
         if(s.charAt(0)=='(') { s = s.substring(1); }
         return new JSONObject(s);

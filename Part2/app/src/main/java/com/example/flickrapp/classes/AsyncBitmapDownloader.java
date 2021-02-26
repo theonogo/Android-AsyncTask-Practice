@@ -18,6 +18,7 @@ import java.net.URL;
 public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
 
+    //Takes in the imageView to set the bitmap of
     public AsyncBitmapDownloader(ImageView imageView) {
         imageViewReference = new WeakReference<ImageView>(imageView);
     }
@@ -52,6 +53,7 @@ public class AsyncBitmapDownloader extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
 
+        //we set the bitmap acquired in doInBackground
         if (imageViewReference != null) {
             ImageView imageView = imageViewReference.get();
             if (imageView != null) {

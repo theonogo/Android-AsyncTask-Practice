@@ -50,6 +50,7 @@ public class MyAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         String url = (String) getItem(position);
 
+        //gets the request queue from our singleton
         RequestQueue queue = MySingleton.getInstance(context).getRequestQueue();
 
         if(convertView==null) {
@@ -57,11 +58,14 @@ public class MyAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(context).inflate(R.layout.bitmaplayout,parent,false);
         }
 
+
+        //puts the imageview in the response listener
         final ImageView imageView = (ImageView) convertView.findViewById(R.id.bitmap_image);
         Response.Listener<Bitmap> rep_listener = response -> {
             imageView.setImageBitmap(response);
         };
 
+        //Constructs the image request and adds it to the queue
         ImageRequest imageRequest = new ImageRequest(url, rep_listener, 1000, 1000, ImageView.ScaleType.CENTER, Bitmap.Config.ARGB_8888, null);
         queue.add(imageRequest);
 

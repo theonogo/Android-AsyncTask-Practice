@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         try {
+            //Ask user for location permissions
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
             }
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //get a location manager and listener to periodically obtain device location
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         MyLocationListener locationListener = new MyLocationListener();
@@ -43,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
         Button listViewButton = (Button) findViewById(R.id.list_button);
         ImageView image = (ImageView) findViewById(R.id.image);
 
+        //get image button
         getImageButton.setOnClickListener( new GetImageOnClickListener(locationManager, image));
-        
+
+        //launch list activity button
         listViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

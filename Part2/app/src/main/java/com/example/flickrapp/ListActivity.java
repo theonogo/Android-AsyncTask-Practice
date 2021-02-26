@@ -16,6 +16,7 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        //Get our listView and assign it our adapter
         ListView listView = (ListView) findViewById(R.id.list);
         MyAdapter myAdapter = new MyAdapter(this);
         AsyncFlickrJSONDataForList asyncFlickrJSONDataForList = new AsyncFlickrJSONDataForList(myAdapter);

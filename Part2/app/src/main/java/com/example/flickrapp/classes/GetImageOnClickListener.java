@@ -22,9 +22,12 @@ public class GetImageOnClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         AsyncFlickrJSONData asyncTask = new AsyncFlickrJSONData(image);
+        //We obtain the location on click so that we know the location is updated
+        //permissions have been obtained in the MainActivity
         Location loc = locationManager.getLastKnownLocation("gps");
         String url = "https://www.flickr.com/services/feeds/photos_public.gne?tags=trees&format=json";
 
+        //if we have our location, we can construct our api request with also our api key
         if(loc!=null) {
             url ="https://api.flickr.com/services/rest/?" +
                     "method=flickr.photos.search" +
@@ -36,6 +39,7 @@ public class GetImageOnClickListener implements View.OnClickListener {
             Log.i("JFL", "Location Acquired");
         }
 
+        //start our assynchronous obtention of image url
         asyncTask.execute(url);
     }
 }
